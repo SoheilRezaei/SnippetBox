@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-
 //The following code is a home handler function which writes a byte
 //slice containing the message as the http response body
 func home(w http.ResponseWriter, r *http.Request) {
@@ -23,6 +22,23 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 }
 
 func snippetCreate(w http.ResponseWriter, r *http.Request) {
+	// Using http best practices we will limit the creation
+	// to methods of type POST
+
+	// if r.Method != "POST" {
+	// 	w.Header().Set("Allow","POST")
+	// 	// w.WriteHeader(405)
+	// 	// w.Write([]byte("Method Not Allowed"))
+	// 	http.Error(w, "Method not allowed", 405)
+	// 	return
+	// }
+
+	if r.Method != http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost)
+		http.Error(w, "Method not Allowed!", http.StatusMethodNotAllowed)
+		return
+	}
+
 	w.Write([]byte("Create a new snippet..."))
 }
 
